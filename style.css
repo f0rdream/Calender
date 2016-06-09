@@ -1,0 +1,77 @@
+html{
+    height: 100%;
+}
+body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft YaHei UI";
+}
+.outerContainer{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.nav{
+    background: #DF3931;
+    color: #ffffff;
+}
+.clearFix:after{
+    content:"";
+    display: block;
+    width: 0;
+    height: 0;
+    clear: both;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.navBottom .days{
+    float: left;
+    width: 70px;
+    text-align: center;
+    color: #ede5e5;
+    padding: 12px 5px;
+}
+.left{
+    margin: 20px 10px 20px 20px;
+}
+.left .dateT{
+    margin-right: 5px;
+    display: inline-block;
+    line-height: 40px;
+    font-size: 40px;
+}
+.left .yearTC{
+    display: inline-block;
+}
+.left .yearTC span{
+    line-height: 14px;
+    font-size: 14px;
+}
+.right{
+    margin: 20px 20px 20px 10px;
+    line-height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 28px;
+}
+.content{
+    background: #ffffff;
+    padding-top: 15px;
+}
+.outerContainer{
+    width: 560px;
+}
+.date{
+    float: left;
+    width: 70px;
+    height: 50px;
+    padding: 0 5px;
+    text-align: center;
+    font-size: 30px;
+}
