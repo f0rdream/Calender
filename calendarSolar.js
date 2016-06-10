@@ -2,7 +2,7 @@ var content = document.getElementsByClassName("content")[0],
     today = new Date();
 //定义默认时间
 var defaultDate = today;
-
+var preObj,arrCalendar;
 //节日对应的对象，后期可手动维护
 var festival = {
     1: {1: "元旦"},
@@ -42,6 +42,10 @@ var festival = {
     vacB = {2015: {1: [1,2,3],2: [18,19,20,21,22,23,24],4: [5,6],5: [1,2,3],6: [20,21,22],9: [27],10: [1,2,3,4,5,6,7]}
         ,2016: {1: [1,2,3], 2: [7,8,9,10,11,12,13],4: [2,3,4,30],5: [1,2],6: [9,10,11],9: [15,16,17],10: [1,2,3,4,5,6,7]}
     };
+//补零函数
+function addZero(s) {
+    return s < 10 ? '0' + s: s;
+}
 
 //初始化
 function initial(){
@@ -63,18 +67,19 @@ function drawCalendar(arrDate,i) {
     nSpan = document.createElement("span");
     nInput = document.createElement("input");
     nInput.style = "display: none";
-    nInput.innerHTML = arrDate;
+    nInput.value = arrDate;
     nSpan.className = "festival";
     nDiv.className = "date";
     nDiv.className += clsName[i];
     addFestival(arrDate,nSpan,nDiv);
     nDiv.innerHTML = arrDate.getDate();
+    addClick(nDiv);
     nDiv.appendChild(nInput);
     nDiv.appendChild(nSpan);
     content.appendChild(nDiv);
 }
 
-//生成当前月日期对象的数组
+//生成当前月日期对象的数组，绘制日历
 function getArr(y,mon){
     var arr = [],
         days = new Date(y,mon,0).getDate(), //确定本月有多少天
@@ -101,9 +106,9 @@ function getArr(y,mon){
         drawCalendar(arrDate,2);
         k ++;
     }
-    return arr;
+    arrCalendar = arr;
 }
-//下面一段代码更加优雅的实现方法？？？、
+//下面一段代码更加优雅的实现方法？？？
 
 //确定当天是否是节日，及是否是假期
 function addFestival(arrDate,spanObj,divObj) {
@@ -131,39 +136,77 @@ function addFestival(arrDate,spanObj,divObj) {
 
 //设置默认时间的样式
 function setDefault(){
-
-}
-function addClick(obj) {
-    if(preObj){
-        if(preObj.className.indexOf(" click") != -1){
-            preObj.className = preObj.className.replace(" click","");
+    for(b in arrCalendar){
+        if(defaultDate - arrCalendar[b] < 86400000 && defaultDate - arrCalendar[b] > 0){
+            var divs = document.getElementsByClassName("date");
+            preObj = divs[b];
+            displayDate(preObj);
+            preObj.className += " click";
         }
     }
+}
+
+//给按钮添加点击的事件
+function addClick(obj) {
     obj.addEventListener("click",function(){
+        if(preObj){
+            if(preObj.className.indexOf(" click") != -1){
+                preObj.className = preObj.className.replace(" click","");
+            }
+        }
         obj.className += " click";
-        return obj;
+        displayDate(obj);
+        preObj =  obj;
     })
 }
+
+//计算距现在的时间
 function daysFromNow(dateObj,dateElem) {
-    var daysFromNow = ~~((dateObj - today) / 86400000);
+    var daysFromNow = (dateObj - today) / 86400000;
+    if(daysFromNow > 0){
+        daysFromNow = ~~daysFromNow + 1;
+    }if(daysFromNow <= 0){
+        daysFromNow = ~~daysFromNow;
+    }
     if(daysFromNow > 0) {
         dateElem.innerHTML = daysFromNow + "天之后";
     }else if(daysFromNow < 0) {
-        dateElem.innerHTML = -dayFromNow + "天之前";
+        dateElem.innerHTML = -daysFromNow + "天之前";
     }else{
         dateElem.innerHTML = "今天"
     }
 }
+
+//显示日期
 function displayDate(obj) {
     var dateT = document.getElementsByClassName("dateT")[0],
         yearT = document.getElementsByClassName("yearT")[0],
         daysFrom = document.getElementsByClassName("daysFrom")[0],
-        inputContent = obj.getElementsByTagName("input")[0].innerHTML,
+        inputContent = obj.getElementsByTagName("input")[0].value,
         inputDate = new Date(inputContent);
     dateT.innerHTML = inputDate.getMonth() + 1 + "月" + inputDate.getDate() + "日";
     yearT.innerHTML = inputDate.getFullYear();
     daysFromNow(inputDate,daysFrom);
 }
+
+//显示时间
+function displayTime() {
+    var nowD  = new Date(),
+        hours = nowD.getHours(),
+        minutes = nowD.getMinutes(),
+        seconds = nowD.getSeconds(),
+        right = document.getElementsByClassName("right")[0];
+    if(hours > 12) {
+        hours = hours - 12;
+        right.innerHTML = "下午" + hours + ":" + addZero(minutes) + ":" + addZero(seconds);
+    }else{
+        right.innerHTML = "上午" + hours + ":" + addZero(minutes) + ":" + addZero(seconds);
+    }
+}
+
+
 initial();
-var arr = getArr(defaultDate.getFullYear(),defaultDate.getMonth() + 1);
+getArr(defaultDate.getFullYear(),defaultDate.getMonth() + 1);
+setInterval(displayTime, 100);
+setDefault();
 
