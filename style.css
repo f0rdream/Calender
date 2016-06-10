@@ -68,10 +68,42 @@ body{
     width: 560px;
 }
 .date{
+    position: relative;
     float: left;
     width: 70px;
     height: 50px;
-    padding: 0 5px;
+    padding: 5px;
     text-align: center;
-    font-size: 30px;
+    font-size: 26px;
+    border-radius: 5px;
+}
+.date:hover{
+    background: rgba(204,204,204,0.5);
+    color: #ffffff;
+}
+.date:hover span{
+    color: #ffffff;
+}
+.preMon, .nxtMon{
+    color: #d4d6e0;
+}
+.date.click{
+    background: #df3931;
+    color: #ffffff;
+}
+.date.click span{
+    color: #ffffff;
+}
+.vacation:after {
+    content: "休";
+    font-size: 12px;
+    position: absolute;
+    color: #54aa53;
+    right: 8px;
+    top: 0;
+}
+.festival{
+    font-size: 14px;
+    display: block;
+    color: #d4d6e0;
 }
