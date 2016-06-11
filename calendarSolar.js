@@ -1,7 +1,10 @@
 var content = document.getElementsByClassName("content")[0],
     today = new Date();
 //定义默认时间
-var defaultDate = today;
+var defaultDate = today,
+    year = defaultDate.getFullYear(),
+    month = defaultDate.getMonth(),
+    dateDay = defaultDate.getDate;
 var preObj,arrCalendar;
 //节日对应的对象，后期可手动维护
 var festival = {
@@ -48,7 +51,7 @@ function addZero(s) {
 }
 
 //初始化
-function initial(){
+function initial() {
     if(content.childNodes.length > 0) {
         content.remove();
         content = document.createElement("div");
@@ -80,14 +83,14 @@ function drawCalendar(arrDate,i) {
 }
 
 //生成当前月日期对象的数组，绘制日历
-function getArr(y,mon){
+function getArr(y,mon) {
     var arr = [],
         days = new Date(y,mon,0).getDate(), //确定本月有多少天
         daysPre = new Date(y,mon - 1,0).getDate(), // 确定上个月有多少天
         datDay = new Date(y,mon - 1,1).getDay(), //确定本月首日是周几
         arrDate,
         k = 1;
-    if(datDay == 0){
+    if(datDay == 0) {
         datDay = 7
     }
     for(var i = daysPre - datDay;i < daysPre;i++) {
@@ -100,7 +103,7 @@ function getArr(y,mon){
         arr.push(arrDate);
         drawCalendar(arrDate,1);
     }
-    while(arr.length < 42){
+    while(arr.length < 42) {
         arrDate = new Date(y,mon,k);
         arr.push(arrDate);
         drawCalendar(arrDate,2);
@@ -113,21 +116,21 @@ function getArr(y,mon){
 //确定当天是否是节日，及是否是假期
 function addFestival(arrDate,spanObj,divObj) {
     if(festivalB[arrDate.getFullYear()]){
-        if(festivalB[arrDate.getFullYear()][arrDate.getMonth() + 1]){
+        if(festivalB[arrDate.getFullYear()][arrDate.getMonth() + 1]) {
             if(festivalB[arrDate.getFullYear()][arrDate.getMonth() + 1][arrDate.getDate()]){
                 spanObj.innerHTML = festivalB[arrDate.getFullYear()][arrDate.getMonth() + 1][arrDate.getDate()];
             }
         }
     }else if(festival[arrDate.getMonth() + 1]){
-        if(festival[arrDate.getMonth() + 1][arrDate.getDate()]){
+        if(festival[arrDate.getMonth() + 1][arrDate.getDate()]) {
             spanObj.innerHTML = festival[arrDate.getMonth() + 1][arrDate.getDate()];
         }
     }
-    if(vacB[arrDate.getFullYear()][arrDate.getMonth() + 1]){
+    if(vacB[arrDate.getFullYear()] && vacB[arrDate.getFullYear()][arrDate.getMonth() + 1]) {
         if(vacB[arrDate.getFullYear()][arrDate.getMonth() + 1].indexOf(arrDate.getDate()) != -1){
             divObj.className += " vacation";
         }
-    }else if(vacA[arrDate.getMonth() + 1]){
+    }else if(vacA[arrDate.getMonth() + 1]) {
         if(vacA[arrDate.getMonth() + 1].indexOf(arrDate.getDate()) != -1){
             divObj.className += " vacation";
         }
@@ -135,7 +138,7 @@ function addFestival(arrDate,spanObj,divObj) {
 }
 
 //设置默认时间的样式
-function setDefault(){
+function setDefault() {
     for(b in arrCalendar){
         if(defaultDate - arrCalendar[b] < 86400000 && defaultDate - arrCalendar[b] > 0){
             var divs = document.getElementsByClassName("date");
@@ -148,9 +151,9 @@ function setDefault(){
 
 //给按钮添加点击的事件
 function addClick(obj) {
-    obj.addEventListener("click",function(){
-        if(preObj){
-            if(preObj.className.indexOf(" click") != -1){
+    obj.addEventListener("click",function() {
+        if(preObj) {
+            if(preObj.className.indexOf(" click") != -1) {
                 preObj.className = preObj.className.replace(" click","");
             }
         }
@@ -163,9 +166,9 @@ function addClick(obj) {
 //计算距现在的时间
 function daysFromNow(dateObj,dateElem) {
     var daysFromNow = (dateObj - today) / 86400000;
-    if(daysFromNow > 0){
+    if(daysFromNow > 0) {
         daysFromNow = ~~daysFromNow + 1;
-    }if(daysFromNow <= 0){
+    }if(daysFromNow <= 0) {
         daysFromNow = ~~daysFromNow;
     }
     if(daysFromNow > 0) {
@@ -204,9 +207,37 @@ function displayTime() {
     }
 }
 
-
+//添加键盘事件
+function addKey() {
+    document.addEventListener("keydown",function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        function reDraw(){
+            initial();
+            getArr(year,month + 1);
+        }
+        switch(e.keyCode){
+            case 37:
+                month --;
+                reDraw();
+                break;
+            case 40:
+                year ++;
+                reDraw();
+                break;
+            case 39:
+                month ++;
+                reDraw();
+                break;
+            case 38:
+                year --;
+                reDraw();
+                break;
+        }
+    })
+}
 initial();
-getArr(defaultDate.getFullYear(),defaultDate.getMonth() + 1);
+getArr(year,month + 1);
 setInterval(displayTime, 100);
 setDefault();
+addKey();
 

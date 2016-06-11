@@ -92,7 +92,7 @@ body{
     background: #df3931;
     color: #ffffff;
 }
-.date.click span{
+.date.click span, .date.click.vacation:after{
     color: #ffffff;
 }
 .vacation:after {
