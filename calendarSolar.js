@@ -53,7 +53,7 @@ function addZero(s) {
 //初始化
 function initial() {
     if(content.childNodes.length > 0) {
-        content.remove();
+        content.parentElement.removeChild(content);
         content = document.createElement("div");
         content.className = ("content");
         document.getElementsByClassName("outerContainer")[0].appendChild(content);

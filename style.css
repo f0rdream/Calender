@@ -68,6 +68,9 @@ body{
 .outerContainer{
     width: 560px;
 }
+.date input{
+    display: none;
+}
 .date{
     position: relative;
     float: left;
